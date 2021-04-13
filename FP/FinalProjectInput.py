@@ -8,62 +8,65 @@ class OutputInventory:
         #class for methods used to make the output inventory files from the input files given
     def __init__(self, item_list):
         self.item_list = item_list
-    def full(self):
+    def full_inventory(self):
         #required output A
         #creates csv output for the the full inventory
         #Each row contains item ID, manufacturer name, item type, price, service date, and damaged
-        with open('FullInventory(1).csv','w') as file:
-            items = self.item_list
-            keys = sorted(items.keys(), key=lambda x: items[x]['manufacturer'])
-            for item in keys:
-                id = item
-                manufacturer = items[item]['manufacturer']
-                item_type = items[item]['item_type']
-                price = items[item]['price']
-                service_date = items[item]['service_date']
-                damaged = items[item]['damaged']
-                file.write('{},{},{},{},{},{}\n'.format(id,manufacturer,item_type,price,service_date,damaged))
+
+        f= open("FullInventory(1).csv","w")
+        items_list = self.item_list
+        keys = sorted(items_list.keys(), key=lambda x: items_list[x]["manufacturer"])
+        # Sorted Alphabetically using build in function sorted & by manufacturer using lambda
+
+        for item in keys:
+            the_id = item
+            manufacturer_name = items_list[item]["manufacturer"]
+            item = items_list[item]["item_type"]
+            price_item = items_list[item]["price"]
+            serv_date = items_list[item]["service_date"]
+            damaged_item = items_list[item]["damaged"]
+            file.write("{},{},{},{},{},{}".format(the_id, manufacturer_name, item, price_item, serv_date, damaged_item))
     def type(self):
         #Required output B
         #creates csv output for item by type and sorted by ID
-        items = self.item_list
+        items_list = self.item_list
         types = []
         keys = sorted(items.keys())
         for item in items:
-            item_type = items[item]['item_type']
-            if item_type not in types:
-                types.append(item_type)
-        for type in types:
-            file_name = type.capitalize() + 'Inventory.csv'
-            with open('FullInventory(1).csv'+file_name, 'w') as file:
-                for item in keys:
-                    id = item
-                    manufacturer = items[item]['manufacturer']
-                    price = items[item]['price']
-                    service_date = items[item]['service_date']
-                    damaged = items[item]['damaged']
-                    item_type = items[item]['item_type']
-                    if type == item_type:
-                        file.write('{},{},{},{},{}\n'.format(id,manufacturer,price,service_date,damaged))
+            item = items[item]['item_type']
+            if item not in types:
+                types.append(item)
+        for types in types:
+            file_name = types() + "Inventory.csv"
+            f = open("FullInventory(1).csv", + file_name, "w")
+            for item in keys:
+                the_id = item
+                manufacturer_name = items[item]["manufacturer"]
+                price_item = items[item]["price"]
+                serv_date = items[item]["service_date"]
+                damaged_item = items[item]["damaged"]
+                item = items[item]["item_type"]
+                if types == item:
+                    file.write("{},{},{},{},{}".format(the_id, manufacturer_name, price_item, serv_date, damaged_item))
     def past_service_date(self):
         #Required output C
         #create csv output file for items past the service date listed
         #sorts oldest to most recent
-        items = self.item_list
-        keys = sorted(items.keys(), key=lambda x: datetime.strptime(items[x]['service_date'], %B %d %Y).date(), reverse=True)
-        with open('PastServiceDateInventory.csv','w') as file:
+        items_number = self.item_list
+        keys = sorted(items_number.keys(), key=lambda x: datetime.strptime(items_number[x]['service_date'], % B % d % Y).date(), reverse =True))
+        f= open("PastServiceDateInventory.csv","w")
             for item in keys:
-                id = item
-                manufacturer = items[item]['manufacturer']
-                item_type = items[item]['item_type']
-                price = items[item]['price']
-                service_date = items[item]['service_date']
-                damaged = items[item]['damaged']
+                the_id = item
+                manufacturer_name = items_number[item]['manufacturer']
+                item = items_number[item]['item_type']
+                price_item = items_number[item]['price']
+                service_date = items_number[item]['service_date']
+                damaged_item = items_number[item]['damaged']
                 today = datetime.now().date()
                 service_expiration = datetime.strptime(service_date, %B %d %Y).date()
                 expired = service_expiration <today
                 if expired:
-                    file.write('{},{},{},{},{},{}\n'.format(id, manufacturer, item_type, price, service_date, damaged))
+                    file.write('{},{},{},{},{},{}'.format(the_id, manufacturer_name, item, price_item, service_date, damaged_item))
     def damaged(self):
         #Required output D
         #creates CSV output file for all items that are damaged
@@ -71,14 +74,14 @@ class OutputInventory:
         keys = sorted(items.keys(), key=lambda x: items[x]['price'], reverse=True)
         with open('DamagedInventory(1).csv','w') as file:
             for item in keys:
-                id = item
-                manufacturer = items[item]['manufacturer']
-                item_type = items[item]['item_type']
+                the_id = item
+                manufacturer_name = items[item]['manufacturer']
+                item = items[item]['item_type']
                 price = items[item]['price']
                 service_date = items[item]['service_date']
                 damaged = items[item]['damaged']
                 if damaged:
-                        file.write('{},{},{},{},{},{}'.format(id, manufacturer, item_type, price, service_date))
+                        file.write('{},{},{},{},{},{}'.format(the_id, manufacturer_name, item, price, service_date))
 
 
 if __name__ == '__main__':
@@ -103,13 +106,6 @@ if __name__ == '__main__':
                 elif file == files[2]:
                     service_date = line[1]
                     items[item_id]['service_date'] = service_date
-
-    #creates output files
-    inventory = OutputInventory(items)
-    inventory.full()
-    inventory.type()
-    inventory.PastServiceDateInventory()
-    inventory.damaged()
 
 
 
